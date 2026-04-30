@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeSync</title>
+    <style>
+      :root {
+        --radius: 10px;
+      }
+      body {
+        font-family: var(--vscode-font-family);
+        color: var(--vscode-foreground);
+        padding: 10px;
+        margin: 0;
+      }
+      h2 {
+        margin: 0;
+        font-size: 15px;
+        letter-spacing: 0.2px;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .pill {
+        font-size: 11px;
+        border-radius: 999px;
+        padding: 3px 8px;
+        border: 1px solid var(--vscode-panel-border);
+        opacity: 0.9;
+      }
+      .section {
+        border: 1px solid var(--vscode-panel-border);
+        border-radius: var(--radius);
+        padding: 10px;
+        margin-bottom: 10px;
+        background: color-mix(in srgb, var(--vscode-editor-background) 92%, var(--vscode-panel-border));
+      }
+      .section-title {
+        font-size: 12px;
+        opacity: 0.85;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      button,
+      .link-button {
+        width: 100%;
+        margin-bottom: 8px;
+        padding: 8px 10px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-align: center;
+        transition: filter 0.1s ease;
+      }
+      button:hover,
+      .link-button:hover {
+        filter: brightness(1.05);
+      }
+      .primary {
+        background: var(--vscode-button-background);
+        color: var(--vscode-button-foreground);
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .secondary {
+        background: var(--vscode-button-secondaryBackground);
+        color: var(--vscode-button-secondaryForeground);
+      }
+      .ghost {
+        background: transparent;
+        border: 1px solid var(--vscode-panel-border);
+        color: var(--vscode-foreground);
+      }
+      .link-button {
+        background: transparent;
+        border: 1px solid var(--vscode-button-border, var(--vscode-panel-border));
+        color: var(--vscode-textLink-foreground);
+      }
+      .status {
+        font-size: 12px;
+        opacity: 0.95;
+        line-height: 1.35;
+      }
+      .files {
+        padding-left: 0;
+        list-style: none;
+        font-size: 12px;
+        margin: 0;
+        max-height: 180px;
+        overflow: auto;
+      }
+      .path {
+        word-break: break-all;
+        font-size: 12px;
+        line-height: 1.35;
+        margin: 6px 0 10px;
+        padding: 8px;
+        border: 1px dashed var(--vscode-panel-border);
+        border-radius: 6px;
+        background: color-mix(in srgb, var(--vscode-editor-background) 96%, var(--vscode-panel-border));
+      }
+      .warn {
+        color: var(--vscode-editorWarning-foreground);
+      }
+      .file-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 6px 8px;
+        border: 1px solid var(--vscode-panel-border);
+        border-radius: 6px;
+        margin-bottom: 6px;
+      }
+      .file-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .file-version {
+        font-size: 11px;
+        opacity: 0.85;
+      }
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>CodeSync</h2>
+      <span class="pill" id="tracked-count">0 files</span>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Quick Sync</div>
+      <label class="toggle-row">
+        <input type="checkbox" id="sync-functions" />
+        Sync function nodes
+      </label>
+      <button class="primary" id="sync-project">Sync Entire Project</button>
+      <button class="secondary" id="sync-file">Sync Current File</button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Vault</div>
+      <div id="workspace-name" class="status">Workspace: not selected</div>
+      <div id="vault-path" class="path warn">Vault path not configured</div>
+      <button class="link-button" id="configure-vault">Set Vault Path</button>
+      <button class="ghost" id="copy-vault-path">Copy Vault Path</button>
+    </div>
+
+    <div class="section status">
+      <div id="last-sync">Last Sync: never</div>
+      <div id="last-result">Last Result: not available</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tracked Files <span class="status" id="tracked-subtitle">Recent versions</span></div>
+      <ul class="files" id="tracked-files"></ul>
+    </div>
+
+    <script nonce="{{nonce}}">
+      const vscode = acquireVsCodeApi();
+      const trackedFilesEl = document.getElementById("tracked-files");
+      const lastSyncEl = document.getElementById("last-sync");
+      const lastResultEl = document.getElementById("last-result");
+      const vaultPathEl = document.getElementById("vault-path");
+      const workspaceNameEl = document.getElementById("workspace-name");
+      const configureVaultBtn = document.getElementById("configure-vault");
+      const copyVaultPathBtn = document.getElementById("copy-vault-path");
+      const trackedCountEl = document.getElementById("tracked-count");
+      const syncFunctionsEl = document.getElementById("sync-functions");
+
+      document.getElementById("sync-file").addEventListener("click", () => {
+        vscode.postMessage({ type: "syncFile" });
+      });
+      document.getElementById("sync-project").addEventListener("click", () => {
+        vscode.postMessage({ type: "syncProject" });
+      });
+      configureVaultBtn.addEventListener("click", () => {
+        vscode.postMessage({ type: "setVaultPath" });
+      });
+      syncFunctionsEl.addEventListener("change", () => {
+        vscode.postMessage({ type: "setSyncFunctions", value: syncFunctionsEl.checked });
+      });
+      copyVaultPathBtn.addEventListener("click", () => {
+        const pathValue = vaultPathEl.textContent || "";
+        if (!pathValue || pathValue === "Vault path not configured") {
+          return;
+        }
+        vscode.postMessage({ type: "copyVaultPath", value: pathValue });
+      });
+
+      window.addEventListener("message", (event) => {
+        const message = event.data;
+        if (message.type !== "status") {
+          return;
+        }
+        lastSyncEl.textContent = `Last Sync: ${message.lastSync || "never"}`;
+        lastResultEl.textContent = `Last Result: ${message.lastResult || "not available"}`;
+        workspaceNameEl.textContent = `Workspace: ${message.workspaceName || "not selected"}`;
+        syncFunctionsEl.checked = Boolean(message.syncFunctionsEnabled);
+        if (message.hasVaultPath) {
+          vaultPathEl.classList.remove("warn");
+          vaultPathEl.textContent = message.vaultPath;
+          configureVaultBtn.textContent = "Change Vault Path";
+          copyVaultPathBtn.disabled = false;
+        } else {
+          vaultPathEl.classList.add("warn");
+          vaultPathEl.textContent = "Vault path not configured";
+          configureVaultBtn.textContent = "Set Vault Path";
+          copyVaultPathBtn.disabled = true;
+        }
+
+        trackedFilesEl.innerHTML = "";
+        const files = message.files || [];
+        trackedCountEl.textContent = `${files.length} file${files.length === 1 ? "" : "s"}`;
+        if (files.length === 0) {
+          const row = document.createElement("li");
+          row.className = "file-row";
+          row.textContent = "No tracked files yet";
+          trackedFilesEl.appendChild(row);
+        } else {
+          for (const file of files) {
+            const row = document.createElement("li");
+            row.className = "file-row";
+            const name = document.createElement("span");
+            name.className = "file-name";
+            name.textContent = file.relativePath;
+            name.title = file.relativePath;
+            const version = document.createElement("span");
+            version.className = "file-version";
+            version.textContent = `v${file.version}`;
+            row.appendChild(name);
+            row.appendChild(version);
+            trackedFilesEl.appendChild(row);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

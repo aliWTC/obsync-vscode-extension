@@ -1,0 +1,142 @@
+{
+  "name": "codesync-extension",
+  "displayName": "CodeSync",
+  "description": "Sync code snapshots and diffs into an Obsidian vault.",
+  "version": "0.1.0",
+  "publisher": "local",
+  "private": true,
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codesync.syncFile",
+        "title": "CodeSync: Sync Current File"
+      },
+      {
+        "command": "codesync.syncProject",
+        "title": "CodeSync: Sync Entire Project"
+      },
+      {
+        "command": "codesync.setVaultPath",
+        "title": "CodeSync: Set Vault Path"
+      },
+      {
+        "command": "codesync.changeVaultPath",
+        "title": "CodeSync: Change Vault Path"
+      },
+      {
+        "command": "codesync.setSyncFunctions",
+        "title": "CodeSync: Toggle Function Sync"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codesync",
+          "title": "CodeSync",
+          "icon": "media/codesync.svg"
+        }
+      ]
+    },
+    "views": {
+      "codesync": [
+        {
+          "id": "codesync.sidebar",
+          "name": "CodeSync",
+          "type": "webview"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "codesync.syncProject",
+          "when": "view == codesync.sidebar && codesync.hasWorkspace",
+          "group": "navigation"
+        },
+        {
+          "command": "codesync.syncFile",
+          "when": "view == codesync.sidebar && codesync.hasWorkspace",
+          "group": "navigation@1"
+        },
+        {
+          "command": "codesync.setVaultPath",
+          "when": "view == codesync.sidebar && !codesync.hasVaultPath",
+          "group": "navigation@2"
+        },
+        {
+          "command": "codesync.changeVaultPath",
+          "when": "view == codesync.sidebar && codesync.hasVaultPath",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "CodeSync",
+      "properties": {
+        "codesync.vaultPath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to your Obsidian vault root."
+        },
+        "codesync.ignoredExtensions": {
+          "type": "array",
+          "default": [
+            ".json",
+            ".lock",
+            ".env",
+            ".gitignore"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "File extensions that CodeSync should skip."
+        },
+        "codesync.ignoredFolders": {
+          "type": "array",
+          "default": [
+            "node_modules",
+            ".git",
+            "dist",
+            "build",
+            ".next"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Folder names that CodeSync should skip during project sync."
+        },
+        "codesync.autoSyncOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically sync the current file on save."
+        },
+        "codesync.syncFunctions": {
+          "type": "boolean",
+          "default": false,
+          "description": "When enabled, CodeSync also generates per-function nodes and call-site links."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "lint": "tsc -p . --noEmit",
+    "watch": "tsc -p . -w",
+    "pretest": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "@types/vscode": "^1.100.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "diff": "^8.0.2"
+  }
+}
