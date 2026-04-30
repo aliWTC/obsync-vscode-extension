@@ -1,2 +1,14 @@
+.vscode/**
+scripts/**
+notes/**
+codesync-test-project/**
+src/**
 tsconfig.json
-**/*.map
+package-lock.json
+node_modules/**
+.git/**
+.gitignore
+.env
+.env.*
+**/.env
+**/.env.*
