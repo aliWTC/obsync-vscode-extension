@@ -2,7 +2,7 @@
   "name": "obsync-vscode-extension",
   "displayName": "Obsync",
   "description": "Sync project code snapshots, versions, and optional function lineage into an Obsidian vault.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "local",
   "private": true,
   "engines": {

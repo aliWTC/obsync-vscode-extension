@@ -65,6 +65,19 @@ Given `codesync.vaultPath = /MyVault` and workspace name `my-app`, Obsync writes
 - `.json` files are ignored by default through `codesync.ignoredExtensions`; remove it if you want JSON notes/version tracking.
 - Markdown source files are always skipped by scanner (`.md`) to avoid recursive note ingestion.
 
+## Install from VSIX
+
+1. Download the latest `.vsix` from GitHub Releases.
+2. In VS Code, open Command Palette and run `Extensions: Install from VSIX...`.
+3. Select the downloaded `.vsix` file.
+4. Reload VS Code when prompted.
+
+CLI install alternative:
+
+```bash
+code --install-extension /absolute/path/to/obsync-vscode-extension-0.1.3.vsix
+```
+
 ## Development
 
 ```bash
