@@ -22,7 +22,7 @@ export async function getVaultPathsForWorkspace(
   if (!configuredVaultPath) {
     const action = "Open Settings";
     const choice = await vscode.window.showErrorMessage(
-      "CodeSync vault path is not configured.",
+      "Obsync vault path is not configured.",
       action,
     );
     if (choice === action) {
@@ -38,7 +38,7 @@ export async function getVaultPathsForWorkspace(
   const vaultStat = await safeStat(vaultRoot);
   if (!vaultStat || !vaultStat.isDirectory()) {
     vscode.window.showErrorMessage(
-      `CodeSync vault path does not exist: ${vaultRoot}`,
+      `Obsync vault path does not exist: ${vaultRoot}`,
     );
     throw new Error(`Invalid vault path: ${vaultRoot}`);
   }

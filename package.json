@@ -1,8 +1,8 @@
 {
-  "name": "codesync-extension",
-  "displayName": "CodeSync",
-  "description": "Sync code snapshots and diffs into an Obsidian vault.",
-  "version": "0.1.1",
+  "name": "obsync-vscode-extension",
+  "displayName": "Obsync",
+  "description": "Sync project code snapshots, versions, and optional function lineage into an Obsidian vault.",
+  "version": "0.1.2",
   "publisher": "local",
   "private": true,
   "engines": {
@@ -12,42 +12,34 @@
     "Other"
   ],
   "main": "./out/extension.js",
-  "activationEvents": [
-    "onView:codesync.sidebar",
-    "onCommand:codesync.syncFile",
-    "onCommand:codesync.syncProject",
-    "onCommand:codesync.setVaultPath",
-    "onCommand:codesync.changeVaultPath",
-    "onCommand:codesync.setSyncFunctions"
-  ],
   "contributes": {
     "commands": [
       {
         "command": "codesync.syncFile",
-        "title": "CodeSync: Sync Current File"
+        "title": "Obsync: Sync Current File"
       },
       {
         "command": "codesync.syncProject",
-        "title": "CodeSync: Sync Entire Project"
+        "title": "Obsync: Sync Entire Project"
       },
       {
         "command": "codesync.setVaultPath",
-        "title": "CodeSync: Set Vault Path"
+        "title": "Obsync: Set Vault Path"
       },
       {
         "command": "codesync.changeVaultPath",
-        "title": "CodeSync: Change Vault Path"
+        "title": "Obsync: Change Vault Path"
       },
       {
         "command": "codesync.setSyncFunctions",
-        "title": "CodeSync: Toggle Function Sync"
+        "title": "Obsync: Toggle Function Sync"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
           "id": "codesync",
-          "title": "CodeSync",
+          "title": "Obsync",
           "icon": "media/codesync.svg"
         }
       ]
@@ -56,7 +48,7 @@
       "codesync": [
         {
           "id": "codesync.sidebar",
-          "name": "CodeSync",
+          "name": "Obsync",
           "type": "webview"
         }
       ]
@@ -86,12 +78,12 @@
       ]
     },
     "configuration": {
-      "title": "CodeSync",
+      "title": "Obsync",
       "properties": {
         "codesync.vaultPath": {
           "type": "string",
           "default": "",
-          "description": "Absolute path to your Obsidian vault root."
+          "description": "Absolute path to your Obsidian vault root (required before syncing)."
         },
         "codesync.ignoredExtensions": {
           "type": "array",
@@ -104,7 +96,7 @@
           "items": {
             "type": "string"
           },
-          "description": "File extensions that CodeSync should skip."
+          "description": "File extensions that Obsync should skip during project sync."
         },
         "codesync.ignoredFolders": {
           "type": "array",
@@ -118,17 +110,17 @@
           "items": {
             "type": "string"
           },
-          "description": "Folder names that CodeSync should skip during project sync."
+          "description": "Folder names that Obsync should skip during project sync."
         },
         "codesync.autoSyncOnSave": {
           "type": "boolean",
           "default": false,
-          "description": "Automatically sync the current file on save."
+          "description": "Automatically sync the current file on save (off by default)."
         },
         "codesync.syncFunctions": {
           "type": "boolean",
           "default": false,
-          "description": "When enabled, CodeSync also generates per-function nodes and call-site links."
+          "description": "When enabled, Obsync also generates per-function nodes and call-site links. Turning it off and running project sync removes only function nodes."
         }
       }
     }
@@ -137,12 +129,17 @@
     "compile": "tsc -p .",
     "lint": "tsc -p . --noEmit",
     "watch": "tsc -p . -w",
-    "pretest": "npm run compile"
+    "pretest": "npm run compile",
+    "package:vsix": "npm run compile && vsce package",
+    "package:vsix:allow-env": "npm run compile && vsce package --allow-package-env-file"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
     "@types/vscode": "^1.100.0",
-    "@vscode/vsce": "^3.9.1"
+    "@vscode/vsce": "2.24.0"
+  },
+  "overrides": {
+    "cheerio": "1.0.0-rc.12"
   },
   "dependencies": {
     "diff": "^8.0.2",

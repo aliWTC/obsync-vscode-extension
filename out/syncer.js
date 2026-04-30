@@ -89,12 +89,12 @@ async function syncSingleFile(document, vaultPaths, output, options) {
         version,
         code: currentContents,
     });
-    if (hasChanges || options?.forceWriteNodes) {
+    if (hasChanges) {
         await (0, fileWriter_1.writeVersionNode)(vaultPaths, {
             filename: noteBase,
             syncedAt,
             version,
-            previousVersion: hasChanges ? existingState?.version ?? null : null,
+            previousVersion: existingState?.version ?? null,
             diff,
         });
     }

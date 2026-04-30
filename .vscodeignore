@@ -2,6 +2,7 @@
 scripts/**
 notes/**
 codesync-test-project/**
+obsync-test-project/**
 src/**
 tsconfig.json
 package-lock.json

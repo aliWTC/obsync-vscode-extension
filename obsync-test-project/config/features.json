@@ -1,0 +1,8 @@
+{
+  "features": {
+    "lineageGraph": true,
+    "functionSync": true,
+    "statsValidation": true,
+    "staleCleanup": true
+  }
+}

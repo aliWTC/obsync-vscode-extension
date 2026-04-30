@@ -105,7 +105,7 @@ async function writeIndexNode(vaultPaths, projectName, syncedAt, trackedFiles) {
         .sort((a, b) => a.relativePath.localeCompare(b.relativePath))
         .map((entry) => `- [[${entry.noteBase}|${entry.relativePath}]] (v${entry.version})`);
     const markdown = [
-        `# ${projectName} - CodeSync Index`,
+        `# ${projectName} - Obsync Index`,
         "",
         `**Last Synced:** ${syncedAt}`,
         `**Tracked Files:** ${trackedFiles.length}`,

@@ -1,0 +1,14 @@
+{
+  "pipelines": [
+    {
+      "id": "sync-daily",
+      "enabled": true,
+      "steps": ["scan", "diff", "write-notes"]
+    },
+    {
+      "id": "sync-on-save",
+      "enabled": false,
+      "steps": ["scan", "write-notes"]
+    }
+  ]
+}

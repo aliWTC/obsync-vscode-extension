@@ -77,7 +77,7 @@ class SidebarProvider {
                 case "copyVaultPath":
                     if (typeof message.value === "string" && message.value.trim().length > 0) {
                         await vscode.env.clipboard.writeText(message.value.trim());
-                        void vscode.window.setStatusBarMessage("CodeSync: Vault path copied", 1800);
+                        void vscode.window.setStatusBarMessage("Obsync: Vault path copied", 1800);
                     }
                     break;
                 case "setSyncFunctions":

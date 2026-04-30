@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-# obsync-vscode-extension
-Local-first VS Code extension for syncing project files, version history, and function call lineage to Obsidian Markdown notes.
-=======
-# CodeSync VS Code Extension
+# Obsync VS Code Extension
 
-CodeSync is a local-first VS Code extension that writes structured Markdown snapshots into an Obsidian vault.
+Obsync is a local-first VS Code extension that writes structured Markdown snapshots into an Obsidian vault.
 
 No backend, no Obsidian plugin, and no external sync service are required.
 
@@ -21,13 +17,13 @@ No backend, no Obsidian plugin, and no external sync service are required.
 ## Basename Collision Handling
 
 - Vault note filenames stay clean by default (for example `index.ts.md`).
-- When multiple files share the same basename across different folders, CodeSync syncs all of them and automatically applies a deterministic path-derived suffix only to the colliding files (for example `index__src.ts.md`, `index__app_features.ts.md`).
+- When multiple files share the same basename across different folders, Obsync syncs all of them and automatically applies a deterministic path-derived suffix only to the colliding files (for example `index__src.ts.md`, `index__app_features.ts.md`).
 - Version notes follow the resolved note name and remain deterministic.
 - During project sync, stale markdown artifacts for files no longer tracked in state/index are cleaned up from the project and `versions/` folders.
 
 ## Vault Output
 
-Given `codesync.vaultPath = /MyVault` and workspace name `my-app`, CodeSync writes:
+Given `codesync.vaultPath = /MyVault` and workspace name `my-app`, Obsync writes:
 
 ```text
 /MyVault/CodeSync/my-app/
@@ -44,16 +40,16 @@ Given `codesync.vaultPath = /MyVault` and workspace name `my-app`, CodeSync writ
 
 ## Commands
 
-- `CodeSync: Sync Current File` (`codesync.syncFile`)
-- `CodeSync: Sync Entire Project` (`codesync.syncProject`)
-- `CodeSync: Set Vault Path` (`codesync.setVaultPath`)
-- `CodeSync: Change Vault Path` (`codesync.changeVaultPath`)
+- `Obsync: Sync Current File` (`codesync.syncFile`)
+- `Obsync: Sync Entire Project` (`codesync.syncProject`)
+- `Obsync: Set Vault Path` (`codesync.setVaultPath`)
+- `Obsync: Change Vault Path` (`codesync.changeVaultPath`)
 
 ## UI Surfaces
 
-- Status bar quick action: `CodeSync Sync Project`
-- CodeSync view toolbar actions: Sync file, sync project, and vault path management
-- CodeSync left panel webview: primary project sync button, current vault path display, one-click set/change vault path
+- Status bar quick action: `Obsync Sync Project`
+- Obsync view toolbar actions: Sync file, sync project, and vault path management
+- Obsync left panel webview: primary project sync button, current vault path display, one-click set/change vault path
 
 ## Settings
 
@@ -63,10 +59,15 @@ Given `codesync.vaultPath = /MyVault` and workspace name `my-app`, CodeSync writ
 - `codesync.autoSyncOnSave` (default: `false`)
 - `codesync.syncFunctions` (default: `false`)
 
+## Defaults and Warnings
+
+- Function sync is disabled by default (`codesync.syncFunctions: false`) for faster initial project sync.
+- `.json` files are ignored by default through `codesync.ignoredExtensions`; remove it if you want JSON notes/version tracking.
+- Markdown source files are always skipped by scanner (`.md`) to avoid recursive note ingestion.
+
 ## Development
 
 ```bash
 npm install
 npm run compile
 ```
->>>>>>> 18cc300 (Initial Obsync extension)

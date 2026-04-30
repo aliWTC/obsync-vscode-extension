@@ -1,0 +1,9 @@
+{
+  "generatedAt": "2026-04-30T00:00:00.000Z",
+  "metrics": [120, 95, 140, 110, 205, 175],
+  "todos": [
+    { "id": "T-2", "done": false, "priority": "high" },
+    { "id": "T-3", "done": false, "priority": "medium" },
+    { "id": "T-4", "done": false, "priority": "high" }
+  ]
+}

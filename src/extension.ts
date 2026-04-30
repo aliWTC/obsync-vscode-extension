@@ -14,15 +14,15 @@ import {
 } from "./vaultManager";
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  const output = vscode.window.createOutputChannel("CodeSync");
+  const output = vscode.window.createOutputChannel("Obsync");
   context.subscriptions.push(output);
   const syncProjectStatusButton = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left,
     100,
   );
-  syncProjectStatusButton.name = "CodeSync Sync Entire Project";
-  syncProjectStatusButton.text = "$(sync) CodeSync Sync Project";
-  syncProjectStatusButton.tooltip = "CodeSync: Sync Entire Project";
+  syncProjectStatusButton.name = "Obsync Sync Entire Project";
+  syncProjectStatusButton.text = "$(sync) Obsync Sync Project";
+  syncProjectStatusButton.tooltip = "Obsync: Sync Entire Project";
   syncProjectStatusButton.command = "codesync.syncProject";
   syncProjectStatusButton.show();
   context.subscriptions.push(syncProjectStatusButton);
@@ -52,8 +52,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       syncFunctionsEnabled: getSyncFunctionsEnabled(),
     });
     syncProjectStatusButton.text = workspaceFolder
-      ? "$(sync) CodeSync Sync Project"
-      : "$(circle-slash) CodeSync No Workspace";
+      ? "$(sync) Obsync Sync Project"
+      : "$(circle-slash) Obsync No Workspace";
     syncProjectStatusButton.command = workspaceFolder ? "codesync.syncProject" : undefined;
   };
 
@@ -235,7 +235,7 @@ async function resolveWorkspaceFolder(
   const workspaceFolders = vscode.workspace.workspaceFolders ?? [];
   if (workspaceFolders.length === 0) {
     if (interactive) {
-      vscode.window.showErrorMessage("Open a project folder to use CodeSync.");
+      vscode.window.showErrorMessage("Open a project folder to use Obsync.");
     }
     return undefined;
   }
@@ -261,7 +261,7 @@ async function resolveWorkspaceFolder(
       folder,
     })),
     {
-      title: "Choose workspace folder for CodeSync",
+      title: "Choose workspace folder for Obsync",
       placeHolder: "Select one workspace to sync",
     },
   );
@@ -283,7 +283,7 @@ async function pickVaultPath(): Promise<string | undefined> {
   const selectedPath = selected[0].fsPath;
   await ensureVaultRootExists(selectedPath);
   await setConfiguredVaultPath(selectedPath);
-  vscode.window.showInformationMessage(`CodeSync vault path set to: ${selectedPath}`);
+  vscode.window.showInformationMessage(`Obsync vault path set to: ${selectedPath}`);
   return selectedPath;
 }
 

@@ -116,7 +116,7 @@ export async function writeIndexNode(
     );
 
   const markdown = [
-    `# ${projectName} - CodeSync Index`,
+    `# ${projectName} - Obsync Index`,
     "",
     `**Last Synced:** ${syncedAt}`,
     `**Tracked Files:** ${trackedFiles.length}`,
