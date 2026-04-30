@@ -27,12 +27,18 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, "media")],
     };
 
-    this.loadHtml(webviewView.webview, nonce).then((html) => {
-      webviewView.webview.html = html;
-      if (this.latestStatus) {
-        this.postStatus(this.latestStatus);
-      }
-    });
+    this.loadHtml(webviewView.webview, nonce)
+      .then((html) => {
+        webviewView.webview.html = html;
+        if (this.latestStatus) {
+          this.postStatus(this.latestStatus);
+        }
+      })
+      .catch((error) => {
+        const message = error instanceof Error ? error.message : String(error);
+        webviewView.webview.html = this.errorHtml(message);
+        void vscode.window.showErrorMessage(`Obsync sidebar failed to load: ${message}`);
+      });
 
     webviewView.webview.onDidReceiveMessage(async (message) => {
       switch (message.type) {
@@ -85,6 +91,21 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const htmlPath = htmlUri.fsPath;
     const rawHtml = await fs.readFile(htmlPath, "utf8");
     return rawHtml.replace("{{nonce}}", nonce);
+  }
+
+  private errorHtml(message: string): string {
+    const escaped = message
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    return `<!DOCTYPE html>
+<html lang="en">
+  <body style="font-family: var(--vscode-font-family); color: var(--vscode-foreground); padding: 12px;">
+    <h3>Obsync failed to load</h3>
+    <p>${escaped}</p>
+    <p>Try reinstalling the VSIX after rebuilding.</p>
+  </body>
+</html>`;
   }
 }
 

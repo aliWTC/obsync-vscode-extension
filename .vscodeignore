@@ -6,6 +6,8 @@ src/**
 tsconfig.json
 package-lock.json
 node_modules/**
+!node_modules/diff/**
+!node_modules/typescript/**
 .git/**
 .gitignore
 .env

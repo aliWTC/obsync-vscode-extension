@@ -12,6 +12,14 @@
     "Other"
   ],
   "main": "./out/extension.js",
+  "activationEvents": [
+    "onView:codesync.sidebar",
+    "onCommand:codesync.syncFile",
+    "onCommand:codesync.syncProject",
+    "onCommand:codesync.setVaultPath",
+    "onCommand:codesync.changeVaultPath",
+    "onCommand:codesync.setSyncFunctions"
+  ],
   "contributes": {
     "commands": [
       {
@@ -134,11 +142,11 @@
   "devDependencies": {
     "@types/node": "^22.15.3",
     "@types/vscode": "^1.100.0",
-    "@vscode/vsce": "^3.9.1",
-    "typescript": "^5.8.3"
+    "@vscode/vsce": "^3.9.1"
   },
   "dependencies": {
-    "diff": "^8.0.2"
+    "diff": "^8.0.2",
+    "typescript": "^5.8.3"
   },
   "repository": {
     "type": "git",
