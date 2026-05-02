@@ -1,6 +1,6 @@
 # Obsync VS Code Extension
 
-Obsync is a local-first VS Code extension that writes structured Markdown snapshots into an Obsidian vault.
+Obsync is a local-first VS Code extension that writes structured Markdown snapshots into an Obsidian vault with accurate backlinks/connections.
 
 No backend, no Obsidian plugin, and no external sync service are required.
 
